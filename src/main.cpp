@@ -117,7 +117,7 @@ void getAdcData() {
     unsigned long mcsLastTime = micros();
     dataAdc[idxBuf][i] = analogRead(ADC_PIN);
     while (micros() - mcsLastTime < SAMPLEING_PERIOD_US) {
-      yield();
+      //yield();
     }
   }
 
@@ -225,7 +225,7 @@ void loop() {
     for (uint8_t i = 0; i < BAR_WIDTH; i++) {
       uint16_t data = 0;
       for (uint8_t f = freqRange[i].low; f <= freqRange[i].high; f++) {
-        const int CONSTRAIN_MAX = 1024, NOISE_CANCEL = 100;
+        const int CONSTRAIN_MAX = 1024, NOISE_CANCEL = 40;
         realComponent[f] = realComponent[f] > NOISE_CANCEL ? realComponent[f] : 0;
         realComponent[f] = constrain(realComponent[f], 0, CONSTRAIN_MAX);
         realComponent[f] = map(realComponent[f], 0, CONSTRAIN_MAX, 0, BAR_HEIGHT);
@@ -248,7 +248,7 @@ void loop() {
     if (countLoop % 100 == 0) {
       USB_SERIAL.println("runFFT cost: " + String(timeLoop) + " micro seconds");
 
-//* log timecost of fastSqrt
+/* log timecost of fastSqrt
       unsigned long tmCost = 0;
       for (int i = 0; i < 256; i++) {
         uint16_t numTest = random(1024);
